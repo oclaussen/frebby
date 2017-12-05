@@ -1,0 +1,86 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+#
+# Copyright 2017, Ole Claussen <claussen.ole@gmail.com>
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+require 'json'
+
+class Frebby
+  @@config = {
+    force_array: [],
+    transformations: {}
+  }
+
+  def self.force_array(*keys)
+    @@config[:force_array] += keys
+  end
+
+  def self.transform(key, value)
+    @@config[:transformations][key] = value
+  end
+
+  def initialize
+    @hash = {}
+  end
+
+  def [](key)
+    @hash[key]
+  end
+
+  def []=(key, value)
+    @hash[key] = value
+  end
+
+  def to_json(options = nil)
+    @hash.to_json(options)
+  end
+
+  def respond_to_missing?(_symbol, _respond_to = false)
+    true
+  end
+
+  def method_missing(name, arg = nil, &blk)
+    return super if !block_given? && arg.nil?
+
+    key = name.to_s
+    if @@config[:transformations].key?(name)
+      key = @@config[:transformations][name]
+    end
+
+    value = arg
+    if block_given?
+      value = Frebby.new
+      value.instance_eval(&blk)
+    end
+
+    if block_given? && !arg.nil?
+      @hash[key] ||= Frebby.new
+      @hash[key][arg] = value
+    elsif @hash.key?(key)
+      @hash[key] = [@hash[key]] unless @hash[key].is_a?(Array)
+      @hash[key] << value
+    elsif @@config[:force_array].include?(name)
+      @hash[key] = [value]
+    else
+      @hash[key] = value
+    end
+  end
+end
+
+hash = Frebby.new
+hash.instance_eval(ARGF.read)
+puts hash.to_json
