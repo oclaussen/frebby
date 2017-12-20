@@ -1,0 +1,7 @@
+Frebby.force_array :foo
+
+foo do
+  bar 'baz'
+end
+
+bar ['baz']

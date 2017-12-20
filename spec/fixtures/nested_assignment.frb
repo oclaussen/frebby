@@ -1,0 +1,5 @@
+foo do
+  bar do
+    baz {}
+  end
+end

@@ -1,0 +1,12 @@
+{
+  "foo": ["hello", "world"],
+  "bar": [
+    ["hello"],
+    ["world"]
+  ],
+  "baz": [
+    1,
+    2,
+    [3]
+  ]
+}
