@@ -1,0 +1,13 @@
+require 'frebby/config'
+
+Frebby.force_array :odds, :evens
+Frebby.transform :odd, :odds
+Frebby.transform :even, :evens
+
+(1..10).to_a.each do |n|
+  if n.odd?
+    odd n
+  else
+    even n
+  end
+end

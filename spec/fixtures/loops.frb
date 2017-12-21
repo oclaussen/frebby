@@ -1,0 +1,10 @@
+{
+  foo: 'hello',
+  bar: 'world'
+}.each do |_key, value|
+  entry value
+end
+
+['baz', 'qux'].each do |value|
+  entry value
+end

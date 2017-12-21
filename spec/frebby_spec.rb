@@ -15,8 +15,8 @@ describe 'frebby' do
           stdin.write(@input)
           stdin.close
 
-          expect(wait_thr.value).to eq(0)
           expect(stderr.read).to be_empty
+          expect(wait_thr.value).to eq(0)
 
           result = JSON.parse(stdout.read)
           expected = JSON.parse(@expected)
