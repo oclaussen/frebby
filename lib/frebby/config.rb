@@ -15,11 +15,36 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-require 'frebby/config'
 
-Frebby.force_array :builder, :provisioner, :post_processor
-Frebby.force_array :inline
+class Frebby
+  module Config
+    @@config = {
+      force_array: [],
+      transformations: {}
+    }
 
-Frebby.transform :builder, 'builders'
-Frebby.transform :provisioner, 'provisioners'
-Frebby.transform :post_processor, 'post-processors'
+    def force_array(*keys)
+      @@config[:force_array] += keys.map(&:to_s)
+    end
+
+    def transform(key, value)
+      @@config[:transformations][key.to_s] = value
+    end
+
+    def _transform_key(original_key)
+      key = super
+      @@config[:transformations][key] || key
+    end
+
+    def _transform_value(original_value, key)
+      value = super
+      if @@config[:force_array].include?(key) && !value.is_a?(Array)
+        [value]
+      else
+        value
+      end
+    end
+  end
+end
+
+Frebby.singleton_class.prepend(Frebby::Config)

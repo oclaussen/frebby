@@ -16,37 +16,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
 require 'json'
 
 class Frebby
-  @@config = {
-    force_array: [],
-    transformations: {}
-  }
-
-  def self.force_array(*keys)
-    @@config[:force_array] += keys
-  end
-
-  def self.transform(key, value)
-    @@config[:transformations][key] = value
-  end
+  extend Forwardable
 
   def initialize
     @hash = {}
   end
 
-  def [](key)
-    @hash[key]
+  def_delegators :@hash, :[], :[]=, :to_json
+
+  def self._transform_key(key)
+    key.to_s
   end
 
-  def []=(key, value)
-    @hash[key] = value
-  end
-
-  def to_json(options = nil)
-    @hash.to_json(options)
+  def self._transform_value(value, _key)
+    value
   end
 
   def respond_to_missing?(_symbol, _respond_to = false)
@@ -55,29 +41,24 @@ class Frebby
 
   def method_missing(name, arg = nil, &blk)
     return super if !block_given? && arg.nil?
-
-    key = name.to_s
-    if @@config[:transformations].key?(name)
-      key = @@config[:transformations][name]
-    end
-
+    key = Frebby._transform_key(name)
     value = arg
+
     if block_given?
       value = Frebby.new
       value.instance_eval(&blk)
     end
 
     if block_given? && !arg.nil?
-      @hash[key] ||= Frebby.new
-      @hash[key][arg] = value
+      existing = @hash[key] || Frebby.new
+      existing[arg] = value
+      value = existing
     elsif @hash.key?(key)
-      @hash[key] = [@hash[key]] unless @hash[key].is_a?(Array)
-      @hash[key] << value
-    elsif @@config[:force_array].include?(name)
-      @hash[key] = [value]
-    else
-      @hash[key] = value
+      existing = @hash[key]
+      value = existing.is_a?(Array) ? (existing + [value]) : [existing, value]
     end
+
+    @hash[key] = Frebby._transform_value(value, key)
   end
 end
 
