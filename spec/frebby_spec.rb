@@ -2,7 +2,7 @@ require 'json'
 require 'open3'
 
 describe 'frebby' do
-  Dir.glob('spec/fixtures/*.frb') do |file|
+  Dir.glob('examples/*.frb') do |file|
     describe File.basename(file, '.frb') do
       before do
         @input = File.read(file)

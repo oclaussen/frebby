@@ -1,3 +1,4 @@
+require 'frebby/config'
 Frebby.transform :foo, 'bar'
 
 foo do

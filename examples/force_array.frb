@@ -1,3 +1,4 @@
+require 'frebby/config'
 Frebby.force_array :foo
 
 foo do
