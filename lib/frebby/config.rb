@@ -18,6 +18,7 @@
 
 class Frebby
   module Config
+    # rubocop:disable Style/ClassVars
     @@config = {
       force_array: [],
       transformations: {}
@@ -44,6 +45,7 @@ class Frebby
         value
       end
     end
+    # rubocop:enable Style/ClassVars
   end
 end
 

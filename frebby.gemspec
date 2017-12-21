@@ -14,5 +14,6 @@ Gem::Specification.new do |spec|
   spec.bindir         = 'bin'
   spec.executables    = ['frebby']
 
-  spec.add_development_dependency 'rspec', '~>3.1'
+  spec.add_development_dependency 'rspec', '~> 3.7'
+  spec.add_development_dependency 'rubocop', '~> 0.52'
 end

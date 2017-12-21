@@ -19,6 +19,9 @@
 require 'json'
 
 class Frebby
+  # rubocop thinks this class is too complicated. Shut up, rubocop.
+  # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity
+  # rubocop:disable Metrics/MethodLength, Metrics/PerceivedComplexity
   extend Forwardable
 
   def initialize
@@ -60,6 +63,9 @@ class Frebby
 
     @hash[key] = Frebby._transform_value(value, key)
   end
+
+  # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity
+  # rubocop:enable Metrics/MethodLength, Metrics/PerceivedComplexity
 end
 
 hash = Frebby.new
