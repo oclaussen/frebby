@@ -22,8 +22,8 @@ require 'json'
 class Frebby
   extend Forwardable
 
-  def initialize
-    @hash = {}
+  def initialize(**initial)
+    @hash = initial.clone
   end
 
   def_delegators :@hash, :[], :[]=, :to_json
@@ -32,28 +32,19 @@ class Frebby
     true
   end
 
-  # rubocop thinks this class is too complicated. Shut up, rubocop.
-  # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity
-  # rubocop:disable Metrics/MethodLength, Metrics/PerceivedComplexity
   def method_missing(name, *args, **kwargs, &blk)
-    return super if args.empty? && kwargs.empty? && !block_given?
-    raise 'Invalid Syntax' if !kwargs.empty? && block_given?
+    no_value = (kwargs.empty? && !block_given?)
+    return super if args.empty? && no_value
 
     args.unshift(name)
-
-    if block_given?
-      value = Frebby.new
-      value.instance_eval(&blk)
-    elsif !kwargs.empty?
-      value = kwargs
-    else
+    if no_value
       value = args.pop
+    else
+      value = Frebby.new(**kwargs)
+      value.instance_eval(&blk) if block_given?
     end
-
     Frebby._set_value(@hash, value, *args)
   end
-  # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity
-  # rubocop:enable Metrics/MethodLength, Metrics/PerceivedComplexity
 
   class << self
     def _transform_key(key)
@@ -73,7 +64,7 @@ class Frebby
 
     def _set_value(target, value, *keys)
       raise '_set_value keys empty. This should not happen' if keys.empty?
-      raise 'Invalid Syntax' if !target.is_a?(Hash) && !target.is_a?(Frebby)
+      raise "Error: #{target} is not a Hash" unless target.respond_to?(:[])
 
       key = _transform_key(keys.shift)
       if keys.empty?
