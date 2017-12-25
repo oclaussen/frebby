@@ -1,0 +1,11 @@
+{
+  "foo": {
+    "hello": "world"
+  },
+  "bar": {
+    "hello": "world"
+  },
+  "baz": {
+    "hello": "world"
+  }
+}

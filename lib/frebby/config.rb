@@ -37,7 +37,7 @@ class Frebby
       @@config[:transformations][key] || key
     end
 
-    def _transform_value(original_value, key)
+    def _transform_value(original_value, key, _target)
       value = super
       if @@config[:force_array].include?(key) && !value.is_a?(Array)
         [value]

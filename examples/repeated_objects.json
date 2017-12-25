@@ -1,8 +1,9 @@
 {
   "foo": {
-    "bar": {
-      "hello": "world"
-    },
+    "bar": [
+      { "value": "hello" },
+      { "value": "world" }
+    ],
     "baz": {
       "hello": "world"
     }

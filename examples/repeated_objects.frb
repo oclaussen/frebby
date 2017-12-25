@@ -1,9 +1,9 @@
 foo 'bar' do
-  hello 'overwritten!'
+  value 'hello'
 end
 
 foo 'bar' do
-  hello 'world'
+  value 'world'
 end
 
 foo 'baz' do

@@ -20,9 +20,6 @@ require 'forwardable'
 require 'json'
 
 class Frebby
-  # rubocop thinks this class is too complicated. Shut up, rubocop.
-  # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity
-  # rubocop:disable Metrics/MethodLength, Metrics/PerceivedComplexity
   extend Forwardable
 
   def initialize
@@ -31,42 +28,61 @@ class Frebby
 
   def_delegators :@hash, :[], :[]=, :to_json
 
-  def self._transform_key(key)
-    key.to_s
-  end
-
-  def self._transform_value(value, _key)
-    value
-  end
-
   def respond_to_missing?(_symbol, _respond_to = false)
     true
   end
 
-  def method_missing(name, arg = nil, &blk)
-    return super if !block_given? && arg.nil?
-    key = Frebby._transform_key(name)
-    value = arg
+  # rubocop thinks this class is too complicated. Shut up, rubocop.
+  # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity
+  # rubocop:disable Metrics/MethodLength, Metrics/PerceivedComplexity
+  def method_missing(name, *args, **kwargs, &blk)
+    return super if args.empty? && kwargs.empty? && !block_given?
+    raise 'Invalid Syntax' if !kwargs.empty? && block_given?
+
+    args.unshift(name)
 
     if block_given?
       value = Frebby.new
       value.instance_eval(&blk)
+    elsif !kwargs.empty?
+      value = kwargs
+    else
+      value = args.pop
     end
 
-    if block_given? && !arg.nil?
-      existing = @hash[key] || Frebby.new
-      existing[arg] = value
-      value = existing
-    elsif @hash.key?(key)
-      existing = @hash[key]
-      value = existing.is_a?(Array) ? (existing + [value]) : [existing, value]
-    end
-
-    @hash[key] = Frebby._transform_value(value, key)
+    Frebby._set_value(@hash, value, *args)
   end
-
   # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity
   # rubocop:enable Metrics/MethodLength, Metrics/PerceivedComplexity
+
+  class << self
+    def _transform_key(key)
+      key.to_s
+    end
+
+    def _transform_value(value, key, target)
+      existing = target[key]
+      if existing.nil?
+        value
+      elsif existing.is_a?(Array)
+        (existing + [value])
+      else
+        [existing, value]
+      end
+    end
+
+    def _set_value(target, value, *keys)
+      raise '_set_value keys empty. This should not happen' if keys.empty?
+      raise 'Invalid Syntax' if !target.is_a?(Hash) && !target.is_a?(Frebby)
+
+      key = _transform_key(keys.shift)
+      if keys.empty?
+        target[key] = _transform_value(value, key, target)
+      else
+        _set_value(target[key] ||= Frebby.new, value, *keys)
+      end
+    end
+  end
 end
 
 hash = Frebby.new
