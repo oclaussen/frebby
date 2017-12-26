@@ -16,16 +16,21 @@
 # limitations under the License.
 #
 require 'json'
+require 'tempfile'
 
-describe 'frebby' do
-  each_example do |name, frb_file, json_file|
-    describe name do
-      it 'matches the expected JSON file' do
-        input = File.read(frb_file)
-        expected = JSON.parse(File.read(json_file))
-        result = JSON.parse(run_frebby(input))
-        expect(result).to eq(expected)
-      end
-    end
+describe 'frebby | packer' do
+  before do
+    generated = run_frebby(File.read('examples/packer.frb'))
+    @temp = Tempfile.new('frebby-packer')
+    @temp.write(generated)
+    @temp.close
+  end
+
+  after do
+    @temp.unlink
+  end
+
+  it 'produces valid packer configuration' do
+    expect(system("packer validate #{@temp.path}")).to eq(true)
   end
 end

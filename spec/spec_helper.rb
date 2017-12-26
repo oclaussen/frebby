@@ -15,6 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+require 'open3'
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
@@ -26,4 +27,26 @@ RSpec.configure do |config|
   config.default_formatter = 'doc'
 
   Kernel.srand config.seed
+end
+
+def each_example
+  Dir.glob 'examples/*.frb' do |frb_file|
+    dir = File.dirname(frb_file)
+    name = File.basename(frb_file, '.frb')
+    json_file = File.join(dir, "#{name}.json")
+    yield name, frb_file, json_file if block_given?
+  end
+end
+
+def run_frebby(input)
+  Open3.popen3('frebby') do |stdin, stdout, stderr, wait_thr|
+    stdin.write(input)
+    stdin.close
+
+    error = stderr.read
+    success = wait_thr.value.success?
+    raise error unless success && error.empty?
+
+    return stdout.read
+  end
 end
