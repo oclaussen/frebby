@@ -18,16 +18,20 @@
 require 'json'
 require 'tmpdir'
 
-describe 'frebby | packer' do
-  it 'produces valid packer configuration' do
+describe 'frebby | terraform' do
+  it 'produces valid terraform configuration' do
     Dir.mktmpdir do |path|
-      generated = run_frebby(File.read('examples/packer.frb'))
-      tmpfile = File.new(File.join(path, 'packer.json'), 'w')
+      generated = run_frebby(File.read('examples/terraform.frb'))
+      tmpfile = File.new(File.join(path, 'terraform.tf.json'), 'w')
       tmpfile.write(generated)
       tmpfile.close
 
-      run_packer = system("packer validate #{tmpfile.path}")
-      expect(run_packer).to eq(true)
+      run_terraform = system <<~COMMAND
+        cd #{path}
+        terraform init -backend=false
+        terraform validate
+      COMMAND
+      expect(run_terraform).to eq(true)
     end
   end
 end
