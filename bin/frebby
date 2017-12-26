@@ -22,7 +22,7 @@ require 'json'
 class Frebby
   extend Forwardable
 
-  def initialize(**initial)
+  def initialize(initial = {})
     @hash = initial.clone
   end
 
@@ -32,16 +32,13 @@ class Frebby
     true
   end
 
-  def method_missing(name, *args, **kwargs, &blk)
-    no_value = (kwargs.empty? && !block_given?)
-    return super if args.empty? && no_value
-
+  def method_missing(name, *args, &blk)
+    return super if args.empty? && !block_given?
     args.unshift(name)
-    if no_value
-      value = args.pop
-    else
-      value = Frebby.new(**kwargs)
-      value.instance_eval(&blk) if block_given?
+    value = args.last.is_a?(Hash) || !block_given? ? args.pop : {}
+    if block_given?
+      value = Frebby.new(value)
+      value.instance_eval(&blk)
     end
     Frebby._set_value(@hash, value, *args)
   end
