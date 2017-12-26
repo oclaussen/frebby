@@ -1,0 +1,15 @@
+require 'frebby/config'
+Frebby.transform :foo, 'fooo'
+Frebby.transform :bar, 'baar'
+
+# Both original and transformed keys should work
+Frebby.force_array :foo, 'baar'
+
+foo do
+  hello 'world'
+end
+
+bar 'baz'
+
+# This one should be kept as-is
+qux 'foo'

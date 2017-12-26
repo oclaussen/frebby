@@ -51,7 +51,8 @@ class Frebby
       key.to_s
     end
 
-    def _transform_value(value, key, target)
+    def _transform_value(value, original_key, target)
+      key = _transform_key(original_key)
       existing = target[key]
       if existing.nil?
         value
@@ -66,11 +67,11 @@ class Frebby
       raise '_set_value keys empty. This should not happen' if keys.empty?
       raise "Error: #{target} is not a Hash" unless target.respond_to?(:[])
 
-      key = _transform_key(keys.shift)
+      key = keys.shift
       if keys.empty?
-        target[key] = _transform_value(value, key, target)
+        target[_transform_key(key)] = _transform_value(value, key, target)
       else
-        _set_value(target[key] ||= Frebby.new, value, *keys)
+        _set_value(target[_transform_key(key)] ||= Frebby.new, value, *keys)
       end
     end
   end

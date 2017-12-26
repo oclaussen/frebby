@@ -25,7 +25,7 @@ class Frebby
     }
 
     def force_array(*keys)
-      @@config[:force_array] += keys.map(&:to_s)
+      @@config[:force_array] += keys
     end
 
     def transform(key, value)
@@ -37,13 +37,12 @@ class Frebby
       @@config[:transformations][key] || key
     end
 
-    def _transform_value(original_value, key, _target)
+    def _transform_value(original_value, original_key, _target)
       value = super
-      if @@config[:force_array].include?(key) && !value.is_a?(Array)
-        [value]
-      else
-        value
-      end
+      key = _transform_key(original_key)
+      fa_keys = @@config[:force_array]
+      force_array = fa_keys.include?(original_key) || fa_keys.include?(key)
+      force_array && !value.is_a?(Array) ? [value] : value
     end
     # rubocop:enable Style/ClassVars
   end

@@ -1,8 +1,0 @@
-require 'frebby/config'
-Frebby.transform :foo, 'bar'
-
-foo do
-  bar 'baz'
-end
-
-qux 'foo'

@@ -1,0 +1,11 @@
+{
+  "fooo": [
+    {
+      "hello": "world"
+    }
+  ],
+  "baar": [
+    "baz"
+  ],
+  "qux": "foo"
+}
