@@ -16,18 +16,7 @@
 # limitations under the License.
 #
 require 'open3'
-
-RSpec.configure do |config|
-  config.expect_with :rspec do |expectations|
-    expectations.include_chain_clauses_in_custom_matcher_descriptions = true
-  end
-
-  config.warnings = true
-  config.order = :random
-  config.default_formatter = 'doc'
-
-  Kernel.srand config.seed
-end
+require 'tmpdir'
 
 def each_example
   Dir.glob 'examples/*.frb' do |frb_file|
@@ -38,15 +27,66 @@ def each_example
   end
 end
 
-def run_frebby(input)
-  Open3.popen3('frebby') do |stdin, stdout, stderr, wait_thr|
-    stdin.write(input)
-    stdin.close
+module Helpers
+  class ExternalTool
+    def initialize(path, available, tmpdir)
+      @path = path
+      @available = available
+      @tmpdir = tmpdir
+    end
 
-    error = stderr.read
-    success = wait_thr.value.success?
-    raise error unless success && error.empty?
+    def available?
+      @available
+    end
 
-    return stdout.read
+    def tmpfile(name)
+      File.join(@tmpdir, name)
+    end
+
+    def run(command)
+      Dir.chdir @tmpdir do
+        Open3.popen3 "#{@path} #{command}" do |_, _, _, wait_thr|
+          return wait_thr.value
+        end
+      end
+    end
   end
+
+  def run_frebby(input, outfile: nil)
+    Open3.popen3 'frebby' do |stdin, stdout, stderr, wait_thr|
+      stdin.write(input)
+      stdin.close
+
+      error = stderr.read
+      raise error unless wait_thr.value.success? && error.empty?
+
+      return stdout.read if outfile.nil?
+      tmpfile = File.new(outfile, 'w')
+      tmpfile.write(stdout.read)
+      tmpfile.close
+    end
+  end
+
+  def with_external_tool(tool_name)
+    Open3.popen3 "command -v #{tool_name};" do |_, stdout, stderr, wait_thr|
+      available = wait_thr.value.success? && stderr.read.empty?
+      tool_path = stdout.read.strip
+      Dir.mktmpdir do |tmpdir|
+        yield ExternalTool.new(tool_path, available, tmpdir) if block_given?
+      end
+    end
+  end
+end
+
+RSpec.configure do |config|
+  config.expect_with :rspec do |expectations|
+    expectations.include_chain_clauses_in_custom_matcher_descriptions = true
+  end
+
+  config.warnings = true
+  config.order = :random
+  config.default_formatter = 'doc'
+  config.include Helpers
+
+  Kernel.srand config.seed
 end

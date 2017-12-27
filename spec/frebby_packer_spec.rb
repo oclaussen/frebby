@@ -15,19 +15,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-require 'json'
-require 'tmpdir'
 
 describe 'frebby | packer' do
   it 'produces valid packer configuration' do
-    Dir.mktmpdir do |path|
-      generated = run_frebby(File.read('examples/packer.frb'))
-      tmpfile = File.new(File.join(path, 'packer.json'), 'w')
-      tmpfile.write(generated)
-      tmpfile.close
+    input = File.read('examples/packer.frb')
+    with_external_tool 'packer' do |packer|
+      pending 'packer not available' unless packer.available?
 
-      run_packer = system("packer validate #{tmpfile.path}")
-      expect(run_packer).to eq(true)
+      tmpfile = packer.tmpfile('packer.json')
+      run_frebby(input, outfile: tmpfile)
+      run_packer = packer.run("validate #{tmpfile}")
+      expect(run_packer.success?).to eq(true)
     end
   end
 end

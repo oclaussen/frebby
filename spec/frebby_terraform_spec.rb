@@ -15,23 +15,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-require 'json'
-require 'tmpdir'
 
 describe 'frebby | terraform' do
   it 'produces valid terraform configuration' do
-    Dir.mktmpdir do |path|
-      generated = run_frebby(File.read('examples/terraform.frb'))
-      tmpfile = File.new(File.join(path, 'terraform.tf.json'), 'w')
-      tmpfile.write(generated)
-      tmpfile.close
+    input = File.read('examples/terraform.frb')
+    with_external_tool 'terraform' do |terraform|
+      pending 'terraform not available' unless terraform.available?
 
-      run_terraform = system <<~COMMAND
-        cd #{path}
-        terraform init -backend=false
-        terraform validate
-      COMMAND
-      expect(run_terraform).to eq(true)
+      run_frebby(input, outfile: terraform.tmpfile('terraform.tf.json'))
+      terraform.run('init -backend=false')
+      run_terraform = terraform.run('validate')
+      expect(run_terraform.success?).to eq(true)
     end
   end
 end
