@@ -60,6 +60,10 @@ class Frebby
       end
     end
 
+    def _transform_result(result)
+      result
+    end
+
     def _set_value(target, value, *keys)
       raise '_set_value keys empty. This should not happen' if keys.empty?
       raise "Error: #{target} is not a Hash" unless target.respond_to?(:[])
@@ -76,4 +80,4 @@ end
 
 hash = Frebby.new
 hash.instance_eval(ARGF.read)
-puts hash.to_json
+puts Frebby._transform_result(hash).to_json
