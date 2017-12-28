@@ -1,0 +1,43 @@
+require 'frebby/presets/ansible'
+
+# This should match the simple ansible example from
+# http://docs.ansible.com/ansible/latest/playbooks_intro.html#playbook-language-example
+
+play do
+  hosts 'webservers'
+  vars http_port: 80, max_clients: 200
+  remote_user 'root'
+
+  task do
+    name 'ensure apache is at the latest version'
+    yum do
+      name 'httpd'
+      state 'latest'
+    end
+  end
+
+  task do
+    name 'write the apache config file'
+    template do
+      src '/srv/httpd.j2'
+      dest '/etc/httpd.conf'
+    end
+    notify 'restart apache'
+  end
+
+  task do
+    name 'ensure apache is running'
+    service do
+      name 'httpd'
+      state 'started'
+    end
+  end
+
+  handler do
+    name 'restart apache'
+    service do
+      name 'httpd'
+      state 'restarted'
+    end
+  end
+end
