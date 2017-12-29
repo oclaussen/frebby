@@ -15,11 +15,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-require 'frebby/config'
+require 'frebby/hooks'
 
-Frebby.root_key 'plays'
-Frebby.force_array 'plays', 'tasks', 'handlers', 'notify', 'tags'
-Frebby.transform 'play', 'plays'
-Frebby.transform 'task', 'tasks'
-Frebby.transform 'handler', 'handlers'
-Frebby.transform 'tag', 'tags'
+Frebby.customize_key do |key|
+  {
+    'play' => 'plays',
+    'task' => 'tasks',
+    'handler' => 'handlers',
+    'tag' => 'tags'
+  }[key]
+end
+
+Frebby.customize_value do |key, value|
+  array_keys = %w[
+    play
+    task
+    handler
+    notify
+    tag
+  ]
+  array_keys.include?(key) && !value.is_a?(Array) ? [value] : nil
+end
+
+Frebby.customize_result do |result|
+  result['plays']
+end

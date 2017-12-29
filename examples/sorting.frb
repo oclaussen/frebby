@@ -1,8 +1,15 @@
-require 'frebby/config'
+require 'frebby/hooks'
 
-Frebby.force_array :odds, :evens
-Frebby.transform :odd, :odds
-Frebby.transform :even, :evens
+Frebby.customize_key do |key|
+  {
+    'odd' => 'odds',
+    'even' => 'evens'
+  }[key]
+end
+
+Frebby.customize_value do |key, value|
+  %w[odd even].include?(key) && !value.is_a?(Array) ? [value] : nil
+end
 
 (1..10).to_a.each do |n|
   if n.odd?

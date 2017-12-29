@@ -15,11 +15,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-require 'frebby/config'
+require 'frebby/hooks'
 
-Frebby.force_array :builder, :provisioner, :post_processor
-Frebby.force_array :inline
+Frebby.customize_key do |key|
+  {
+    'builder' => 'builders',
+    'provisioner' => 'provisioners',
+    'post_processor' => 'post-processors'
+  }[key]
+end
 
-Frebby.transform :builder, 'builders'
-Frebby.transform :provisioner, 'provisioners'
-Frebby.transform :post_processor, 'post-processors'
+Frebby.customize_value do |key, value|
+  array_keys = %w[
+    builder
+    provisioner
+    post_processor
+    inline
+  ]
+  array_keys.include?(key) && !value.is_a?(Array) ? [value] : nil
+end
