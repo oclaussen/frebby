@@ -16,12 +16,14 @@
 # limitations under the License.
 #
 require 'frebby/hooks'
-require 'frebby/utils'
 
-Frebby.pluralize 'play', as: 'plays'
-Frebby.pluralize 'task', as: 'tasks'
-Frebby.pluralize 'handler', as: 'handlers'
-Frebby.pluralize 'tag', as: 'tags'
-Frebby.pluralize 'notify'
-
-Frebby.customize_result { |result| result['plays'] }
+class Frebby
+  class << self
+    def pluralize(key, as: nil)
+      customize_key { |k| k == key.to_s ? as : nil } unless as.nil?
+      customize_value do |k, v|
+        [key.to_s, as.to_s].compact.include?(k) && !v.is_a?(Array) ? [v] : nil
+      end
+    end
+  end
+end

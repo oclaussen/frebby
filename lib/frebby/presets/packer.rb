@@ -15,22 +15,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-require 'frebby/hooks'
+require 'frebby/utils'
 
-Frebby.customize_key do |key|
-  {
-    'builder' => 'builders',
-    'provisioner' => 'provisioners',
-    'post_processor' => 'post-processors'
-  }[key]
-end
-
-Frebby.customize_value do |key, value|
-  array_keys = %w[
-    builder
-    provisioner
-    post_processor
-    inline
-  ]
-  array_keys.include?(key) && !value.is_a?(Array) ? [value] : nil
-end
+Frebby.pluralize 'builder', as: 'builders'
+Frebby.pluralize 'provisioner', as: 'provisioners'
+Frebby.pluralize 'post_processor', as: 'post-processors'
+Frebby.pluralize 'inline'
