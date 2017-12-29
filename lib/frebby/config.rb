@@ -15,48 +15,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+require 'frebby/hooks'
 
 class Frebby
-  module Config
-    # rubocop:disable Style/ClassVars
-    @@config = {
-      force_array: [],
-      transformations: {},
-      root_key: nil
-    }
-
+  class << self
     def force_array(*keys)
-      @@config[:force_array] += keys
+      keys = keys.map(&:to_s)
+      customize_value do |key, value|
+        transformed_key = _transform_key_hook(key)
+        do_force_array = keys.include?(key) || keys.include?(transformed_key)
+        do_force_array && !value.is_a?(Array) ? [value] : nil
+      end
     end
 
     def transform(key, value)
-      @@config[:transformations][key.to_s] = value
+      key = key.to_s
+      customize_key { |k| key == k ? value : nil }
     end
 
     def root_key(key)
-      @@config[:root_key] = key
+      key = key.to_s
+      customize_result { |result| result.key?(key) ? result[key] : nil }
     end
-
-    def _transform_key(original_key)
-      key = super
-      @@config[:transformations][key] || key
-    end
-
-    def _transform_value(original_value, original_key, _target)
-      value = super
-      key = _transform_key(original_key)
-      fa_keys = @@config[:force_array]
-      force_array = fa_keys.include?(original_key) || fa_keys.include?(key)
-      force_array && !value.is_a?(Array) ? [value] : value
-    end
-
-    def _transform_result(result)
-      root_key = @@config[:root_key]
-      return result if root_key.nil? || !result.key?(root_key)
-      result[root_key]
-    end
-    # rubocop:enable Style/ClassVars
   end
 end
-
-Frebby.singleton_class.prepend(Frebby::Config)

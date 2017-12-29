@@ -5,3 +5,13 @@ AllCops:
 
 Style/Documentation:
   Enabled: false
+
+# Yes, the main script is a bit weird
+Metrics/AbcSize:
+  Exclude: ['bin/frebby']
+Metrics/CyclomaticComplexity:
+  Exclude: ['bin/frebby']
+Metrics/MethodLength:
+  Exclude: ['bin/frebby']
+Metrics/PerceivedComplexity:
+  Exclude: ['bin/frebby']

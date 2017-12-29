@@ -21,63 +21,63 @@ require 'json'
 
 class Frebby
   extend Forwardable
+  def_delegators :@hash, :[], :[]=, :to_json
+
+  class << self
+    def _transform_key_hook(key)
+      key
+    end
+
+    def _transform_value_hook(_key, value)
+      value
+    end
+
+    def _transform_result_hook(result)
+      result
+    end
+  end
 
   def initialize(initial = {})
     @hash = initial.clone
   end
 
-  def_delegators :@hash, :[], :[]=, :to_json
-
   def respond_to_missing?(_symbol, _respond_to = false)
     true
   end
 
-  def method_missing(name, *args, &blk)
+  def method_missing(*args, &blk)
     return super if args.empty? && !block_given?
-    args.unshift(name)
+
+    set_value = proc { |hash, value, keys|
+      raise "Error: #{hash} is not a Hash" unless hash.respond_to?(:[])
+
+      original_key = keys.shift.to_s
+      key = Frebby._transform_key_hook(original_key)
+
+      unless keys.empty?
+        return set_value.call(hash[key] ||= Frebby.new, value, keys)
+      end
+
+      existing = hash[key]
+      new_value = if existing.nil?
+                    value
+                  elsif existing.is_a?(Array)
+                    (existing + [value])
+                  else
+                    [existing, value]
+                  end
+      hash[key] = Frebby._transform_value_hook(original_key, new_value)
+    }
+
     value = args.last.is_a?(Hash) || !block_given? ? args.pop : {}
     if block_given?
       value = Frebby.new(value)
       value.instance_eval(&blk)
     end
-    Frebby._set_value(@hash, value, *args)
-  end
-
-  class << self
-    def _transform_key(key)
-      key.to_s
-    end
-
-    def _transform_value(value, original_key, target)
-      key = _transform_key(original_key)
-      existing = target[key]
-      if existing.nil?
-        value
-      elsif existing.is_a?(Array)
-        (existing + [value])
-      else
-        [existing, value]
-      end
-    end
-
-    def _transform_result(result)
-      result
-    end
-
-    def _set_value(target, value, *keys)
-      raise '_set_value keys empty. This should not happen' if keys.empty?
-      raise "Error: #{target} is not a Hash" unless target.respond_to?(:[])
-
-      key = keys.shift
-      if keys.empty?
-        target[_transform_key(key)] = _transform_value(value, key, target)
-      else
-        _set_value(target[_transform_key(key)] ||= Frebby.new, value, *keys)
-      end
-    end
+    set_value.call(@hash, value, args)
   end
 end
 
 hash = Frebby.new
 hash.instance_eval(ARGF.read)
-puts Frebby._transform_result(hash).to_json
+puts Frebby._transform_result_hook(hash).to_json
