@@ -20,9 +20,13 @@ require 'frebby/hooks'
 class Frebby
   class << self
     def pluralize(key, as: nil)
-      customize_key { |k| k == key.to_s ? as : nil } unless as.nil?
-      customize_value do |k, v|
-        [key.to_s, as.to_s].compact.include?(k) && !v.is_a?(Array) ? [v] : nil
+      customize_key { |k| as if k == key.to_s } unless as.nil?
+
+      customize_value do |v, original_key:, transformed_key:, **_data|
+        keys = [key.to_s, as.to_s].compact
+        should_be_array = keys.include?(original_key) ||
+                          keys.include?(transformed_key)
+        should_be_array && !v.is_a?(Array) ? [v] : nil
       end
     end
   end
