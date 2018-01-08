@@ -37,8 +37,9 @@ class Frebby
     end
   end
 
-  def initialize(initial = {})
+  def initialize(initial = {}, &blk)
     @hash = initial.clone
+    instance_eval(&blk) if block_given?
   end
 
   def respond_to_missing?(_symbol, _respond_to = false)
@@ -67,23 +68,29 @@ class Frebby
                     [existing, value]
                   end
 
-      transform_data = {
+      hash[key] = Frebby._transform_value_hook(
+        new_value,
         transformed_key: key,
         original_key: original_key,
         target: hash
-      }
-      hash[key] = Frebby._transform_value_hook(new_value, transform_data)
+      )
     }
 
     value = args.last.is_a?(Hash) || !block_given? ? args.pop : {}
-    if block_given?
-      value = Frebby.new(value)
-      value.instance_eval(&blk)
-    end
+    value = Frebby.new(value, &blk) if block_given?
     set_value.call(@hash, value, args)
   end
 end
 
 hash = Frebby.new
-hash.instance_eval(ARGF.read)
-puts Frebby._transform_result_hook(hash, {}).to_json
+
+lines = []
+ARGF.each do |line|
+  lines << line
+  if ARGF.eof?
+    hash.instance_eval(lines.join, ARGF.filename)
+    lines = []
+  end
+end
+
+STDOUT.puts Frebby._transform_result_hook(hash, {}).to_json
