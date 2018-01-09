@@ -18,15 +18,6 @@
 require 'open3'
 require 'tmpdir'
 
-def each_example
-  Dir.glob 'examples/*.frb' do |frb_file|
-    dir = File.dirname(frb_file)
-    name = File.basename(frb_file, '.frb')
-    json_file = File.join(dir, "#{name}.json")
-    yield name, frb_file, json_file if block_given?
-  end
-end
-
 module Helpers
   class ExternalTool
     def initialize(path, available, tmpdir)
@@ -75,6 +66,13 @@ module Helpers
         yield ExternalTool.new(tool_path, available, tmpdir) if block_given?
       end
     end
+  end
+
+  def expected_output_for(frb_file)
+    basename = File.basename(frb_file, '.frb')
+    dir = File.dirname(frb_file)
+    json_file = File.join(dir, "#{basename}.json")
+    File.read(json_file)
   end
 end
 

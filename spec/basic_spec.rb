@@ -15,17 +15,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+require 'json'
 
-describe 'frebby | packer' do
-  it 'produces valid packer configuration' do
-    input = File.read('examples/packer.frb')
-    with_external_tool 'packer' do |packer|
-      pending 'packer not available' unless packer.available?
-
-      tmpfile = packer.tmpfile('packer.json')
-      run_frebby(input, outfile: tmpfile)
-      run_packer = packer.run("validate #{tmpfile}")
-      expect(run_packer.success?).to eq(true)
+describe 'frebby' do
+  context 'basic examples' do
+    Dir.glob 'examples/basic/*.frb' do |file|
+      it "produces expected JSON for #{File.basename(file)}" do
+        input = File.read(file)
+        expected = JSON.parse(expected_output_for(file))
+        result = JSON.parse(run_frebby(input))
+        expect(result).to eq(expected)
+      end
     end
   end
 end
