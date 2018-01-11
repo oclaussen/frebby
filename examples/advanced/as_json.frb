@@ -1,0 +1,6 @@
+require 'frebby/utils'
+
+foo(Frebby.as_json do
+  bar 'baz'
+  hello 'world'
+end)

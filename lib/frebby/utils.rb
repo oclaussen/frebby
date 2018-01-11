@@ -14,5 +14,10 @@ class Frebby
         should_be_array && !v.is_a?(Array) ? [v] : nil
       end
     end
+
+    def as_json(&blk)
+      item = Frebby.new(&blk)
+      Frebby._transform_result_hook(item, {}).to_json
+    end
   end
 end
