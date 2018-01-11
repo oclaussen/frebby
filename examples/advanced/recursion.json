@@ -1,0 +1,13 @@
+{
+  "foo": [
+    {
+      "hellos": ["world"]
+    },
+    {
+      "bars": [1],
+      "baz": 2
+    }
+  ],
+  "hello": "world",
+  "bar": 3
+}

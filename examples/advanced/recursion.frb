@@ -1,0 +1,19 @@
+require 'frebby/recursion'
+
+# Assuming the unit tests read the files from stdin, so these paths must
+# be relative to the CWD
+foo Frebby.read_file('examples/advanced/pluralize.frb')
+
+sample_text = <<~TEXT
+  require 'frebby/utils'
+  Frebby.pluralize 'bar', as: 'bars'
+
+  bar 1
+  baz 2
+TEXT
+
+foo Frebby.read_text(sample_text)
+
+# These should not be affected by the pluralize in the nested calls
+hello 'world'
+bar 3
