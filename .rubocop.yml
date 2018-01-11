@@ -2,9 +2,15 @@ AllCops:
   DisplayCopNames: true
   DisplayStyleGuide: true
   TargetRubyVersion: 2.4
+  Include:
+    - '**/*.frb'
 
 Style/Documentation:
   Enabled: false
+
+# These names are fixed
+Naming/FileName:
+  Exclude: ['Gemfile', 'Rakefile']
 
 # Yes, the main script is a bit weird
 Metrics/AbcSize:
@@ -15,3 +21,9 @@ Metrics/MethodLength:
   Exclude: ['bin/frebby']
 Metrics/PerceivedComplexity:
   Exclude: ['bin/frebby']
+
+# These are just examples, so it's fine
+Style/FrozenStringLiteralComment:
+  Exclude: ['**/*.frb']
+Metrics/BlockLength:
+  Exclude: ['**/*.frb']

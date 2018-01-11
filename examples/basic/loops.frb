@@ -1,10 +1,10 @@
 {
   foo: 'hello',
   bar: 'world'
-}.each do |_key, value|
+}.each_value do |value|
   entry value
 end
 
-['baz', 'qux'].each do |value|
+%w[baz qux].each do |value|
   entry value
 end

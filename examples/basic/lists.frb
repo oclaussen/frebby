@@ -1,4 +1,4 @@
-foo ['hello', 'world']
+foo %w[hello world]
 bar [['hello'], ['world']]
 baz 1
 baz 2

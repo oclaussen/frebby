@@ -15,7 +15,7 @@ builder do
   region 'us-east-1'
 
   source_ami_filter do
-    owners %w(099720109477)
+    owners %w[099720109477]
     most_recent true
     filters(
       'virtualization-type' => 'hvm',

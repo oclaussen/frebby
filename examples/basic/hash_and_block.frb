@@ -2,8 +2,8 @@ foo do
   hello 'world'
 end
 
-bar({
+bar(
   hello: 'world'
-})
+)
 
 baz hello: 'world'

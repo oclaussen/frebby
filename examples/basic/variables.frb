@@ -1,4 +1,4 @@
-foo = %w(hello world)
+foo = %w[hello world]
 
 bar foo
 baz foo

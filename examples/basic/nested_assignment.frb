@@ -1,5 +1,5 @@
 foo do
   bar do
-    baz {}
+    baz 1
   end
 end
