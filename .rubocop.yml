@@ -21,6 +21,8 @@ Metrics/MethodLength:
   Exclude: ['bin/frebby']
 Metrics/PerceivedComplexity:
   Exclude: ['bin/frebby']
+Style/MethodMissing:
+  Exclude: ['bin/frebby']
 
 # These are just examples, so it's fine
 Style/FrozenStringLiteralComment:

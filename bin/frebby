@@ -46,9 +46,7 @@ class Frebby
     true
   end
 
-  def method_missing(*args, &blk)
-    return super if args.empty? && !block_given?
-
+  def method_missing(name, *args, &blk)
     set_value = proc { |hash, value, keys|
       raise "Error: #{hash} is not a Hash" unless hash.respond_to?(:[])
 
@@ -76,6 +74,11 @@ class Frebby
       )
     }
 
+    if args.empty? && !block_given?
+      return @hash[Frebby._transform_key_hook(name.to_s, {})]
+    end
+
+    args.unshift name
     value = args.last.is_a?(Hash) || !block_given? ? args.pop : {}
     value = Frebby.new(value, &blk) if block_given?
     set_value.call(@hash, value, args)

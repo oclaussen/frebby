@@ -1,0 +1,7 @@
+someobject = foo do
+  hello 'world'
+end
+
+bar do
+  hello someobject.hello
+end
