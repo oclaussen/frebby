@@ -17,7 +17,7 @@ class Frebby
 
     def as_json(&blk)
       item = Frebby.new(&blk)
-      Frebby._transform_result_hook(item, {}).to_json
+      Frebby._transform_result_hook(item).to_json
     end
   end
 end

@@ -24,15 +24,15 @@ class Frebby
   def_delegators :@hash, :[], :[]=, :to_json
 
   class << self
-    def _transform_key_hook(key, _data)
+    def _transform_key_hook(key, **_data)
       key
     end
 
-    def _transform_value_hook(value, _data)
+    def _transform_value_hook(value, **_data)
       value
     end
 
-    def _transform_result_hook(result, _data)
+    def _transform_result_hook(result, **_data)
       result
     end
   end
@@ -51,7 +51,7 @@ class Frebby
       raise "Error: #{hash} is not a Hash" unless hash.respond_to?(:[])
 
       original_key = keys.shift.to_s
-      key = Frebby._transform_key_hook(original_key, {})
+      key = Frebby._transform_key_hook(original_key)
 
       unless keys.empty?
         return set_value.call(hash[key] ||= Frebby.new, value, keys)
@@ -75,7 +75,7 @@ class Frebby
     }
 
     if args.empty? && !block_given?
-      return @hash[Frebby._transform_key_hook(name.to_s, {})]
+      return @hash[Frebby._transform_key_hook(name.to_s)]
     end
 
     args.unshift name
@@ -96,4 +96,4 @@ ARGF.each do |line|
   end
 end
 
-STDOUT.puts Frebby._transform_result_hook(hash, {}).to_json
+STDOUT.puts Frebby._transform_result_hook(hash).to_json
