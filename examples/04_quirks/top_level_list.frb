@@ -1,0 +1,17 @@
+# A frebby configuration always results in a JSON object. There is no
+# obvious way to generate a JSON list on the top level. Some tools (for example
+# Ansible playbooks) expect a JSON list though.
+
+# You can work around this by inventing a new top-level key, and stripping
+# this key afterwards with the `customize_result` hook:
+
+require 'frebby/hooks'
+Frebby.customize_result { |result| result['dummy'] }
+
+dummy do
+  foo 'bar'
+end
+
+dummy do
+  hello 'world'
+end

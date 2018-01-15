@@ -1,0 +1,8 @@
+{
+  "wont_work": {
+    "value": null
+  },
+  "will_work": {
+    "value": "something"
+  }
+}

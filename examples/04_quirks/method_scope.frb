@@ -1,0 +1,25 @@
+# If you define custom functions in your config file, they will not be
+# available in nested objects, because they are evaluated in a different scope.
+
+# This will not work:
+
+def my_value
+  'something'
+end
+
+wont_work do
+  value my_value
+end
+
+# Instead, you could define the methods as singletons on the top-level
+# `Frebby` class, then they will be available throughout the rest of the config:
+
+class ::Frebby
+  def my_value
+    'something'
+  end
+end
+
+will_work do
+  value my_value
+end

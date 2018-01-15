@@ -1,0 +1,19 @@
+# The normal assignmet to a key is a ruby method call on a ruby object.
+# This will fail if the method already exists on the object by default.
+
+begin
+  # In this case, you will get a weird error message, for example because the
+  # method expects a different type or number ouf parameters, or it is private.
+  # Or nothing happens at all, depending on the method:
+
+  is_a? 'foo'
+  send 'foo'
+  test 'foo'
+rescue
+  # You can work around this by using the normal hash accessor to set the value
+  # This is ugly, but better than nothing:
+
+  self['is_a?'] = 'foo'
+  self['send'] = 'foo'
+  self['test'] = 'foo'
+end

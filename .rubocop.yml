@@ -31,6 +31,10 @@ Style/BlockDelimiters:
   Exclude: ['examples/**/*.frb']
 Style/BracesAroundHashParameters:
   Exclude: ['examples/**/*.frb']
+Style/RescueStandardError:
+  Exclude: ['examples/**/*.frb']
+Style/ClassAndModuleChildren:
+  Exclude: ['examples/**/*.frb']
 Metrics/BlockLength:
   Exclude: ['examples/**/*.frb']
 Lint/AmbiguousBlockAssociation:
