@@ -1,0 +1,16 @@
+# Objects can be nested in the obvious way:
+
+foo {
+  bar {
+    baz 1
+  }
+}
+
+# Objects are just Ruby blocks, so both brackets and do/end syntax works.
+# do/end is recommended, to avoid confusion with actual hash literals.
+
+fooo do
+  baar do
+    baaz 2
+  end
+end

@@ -1,0 +1,6 @@
+# Also, you can use variables to reuse the same definition multiple times:
+
+foo = %w[hello world]
+
+bar foo
+baz foo

@@ -1,3 +1,5 @@
+# Using a key will always return the value assigned to it
+
 someobject = foo do
   hello 'world'
 end

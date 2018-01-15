@@ -1,0 +1,7 @@
+# You can assign values to keys like this:
+
+foo 'bar'
+baz 3
+qux true
+
+# Note that each 'key' is basically a ruby method here.

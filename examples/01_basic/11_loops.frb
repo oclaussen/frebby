@@ -1,3 +1,5 @@
+# This is just ruby, so you can use loops to repeat definitions:
+
 {
   foo: 'hello',
   bar: 'world'

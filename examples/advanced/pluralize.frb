@@ -1,5 +1,0 @@
-require 'frebby/utils'
-
-Frebby.pluralize 'hello', as: 'hellos'
-
-hello 'world'

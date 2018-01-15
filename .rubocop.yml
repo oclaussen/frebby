@@ -26,6 +26,12 @@ Style/MethodMissing:
 
 # These are just examples, so it's fine
 Style/FrozenStringLiteralComment:
-  Exclude: ['**/*.frb']
+  Exclude: ['examples/**/*.frb']
+Style/BlockDelimiters:
+  Exclude: ['examples/**/*.frb']
+Style/BracesAroundHashParameters:
+  Exclude: ['examples/**/*.frb']
 Metrics/BlockLength:
-  Exclude: ['**/*.frb']
+  Exclude: ['examples/**/*.frb']
+Lint/AmbiguousBlockAssociation:
+  Exclude: ['examples/**/*.frb']

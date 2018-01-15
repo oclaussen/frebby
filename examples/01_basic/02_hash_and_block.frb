@@ -1,0 +1,14 @@
+# Objects are defined either as ruby blocks or ruby hashes.
+# All the different syntaxes work for passing these to methods work:
+
+foo {
+  hello 'world'
+}
+
+bar do
+  hello 'world'
+end
+
+baz hello: 'world'
+
+qux({ hello: 'world' })

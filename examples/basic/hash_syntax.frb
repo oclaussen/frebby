@@ -1,3 +1,0 @@
-foo 'bar' do
-  self['test'] = 'qux'
-end

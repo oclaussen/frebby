@@ -1,0 +1,27 @@
+# The recursion module contains methods to include additional Frebby config
+# files. These functions always run 'sandboxed' and have no acces to your
+# current state.
+# Files are referenced relative to the current file, as long as Frebby has any
+# information what file it is currently reading. If you pass the configuration
+# to Frebby from stdin, it will try to find these files relative to the current
+# working directory instead.
+
+require 'frebby/recursion'
+
+# Assuming the unit tests read the files from stdin, so we write these paths
+# relative to the CWD
+foo Frebby.read_file('examples/02_advanced/pluralize.frb')
+
+sample_text = <<~TEXT
+  require 'frebby/utils'
+  Frebby.pluralize 'bar', as: 'bars'
+
+  bar 1
+  baz 2
+TEXT
+
+foo Frebby.read_text(sample_text)
+
+# These should not be affected by the pluralize in the nested calls
+hello 'world'
+bar 3

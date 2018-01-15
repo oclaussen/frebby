@@ -1,9 +1,0 @@
-foo do
-  hello 'world'
-end
-
-bar(
-  hello: 'world'
-)
-
-baz hello: 'world'

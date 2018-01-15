@@ -4,7 +4,7 @@ require 'json'
 
 describe 'frebby' do
   context 'basic examples' do
-    Dir.glob 'examples/basic/*.frb' do |file|
+    Dir.glob 'examples/01_basic/*.frb' do |file|
       it "produces expected JSON for #{File.basename(file)}" do
         input = File.read(file)
         expected = JSON.parse(expected_output_for(file))

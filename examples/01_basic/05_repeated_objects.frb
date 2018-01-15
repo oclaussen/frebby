@@ -1,3 +1,6 @@
+# Repeating the same nested key into an object multiple times works
+# mostly as you would expect:
+
 foo 'bar' do
   value 'hello'
 end

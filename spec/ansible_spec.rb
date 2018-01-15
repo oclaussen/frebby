@@ -4,7 +4,7 @@ require 'json'
 
 describe 'frebby' do
   context 'ansible' do
-    Dir.glob 'examples/presets/ansible/*.frb' do |file|
+    Dir.glob 'examples/03_presets/ansible/*.frb' do |file|
       it "produces expected JSON for #{File.basename(file)}" do
         input = File.read(file)
         expected = JSON.parse(expected_output_for(file))

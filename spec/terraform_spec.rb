@@ -4,7 +4,7 @@ require 'json'
 
 describe 'frebby' do
   context 'terraform' do
-    Dir.glob 'examples/presets/terraform/*.frb' do |file|
+    Dir.glob 'examples/03_presets/terraform/*.frb' do |file|
       it "produces expected JSON for #{File.basename(file)}" do
         input = File.read(file)
         expected = JSON.parse(expected_output_for(file))

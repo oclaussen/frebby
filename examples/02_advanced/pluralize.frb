@@ -1,0 +1,8 @@
+# One frequent use case is that a specific key should always be rendered as an
+# array, even if it is only used once. We included a `pluralize` function for
+# this:
+
+require 'frebby/utils'
+Frebby.pluralize 'hello', as: 'hellos'
+
+hello 'world'

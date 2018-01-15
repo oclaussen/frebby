@@ -1,0 +1,11 @@
+# Lists are defined as ruby lists.
+
+foo %w[hello world]
+bar [['hello'], ['world']]
+
+# Repeating the same key multiple times will convert it to a list as well,
+# just like in HCL.
+
+baz 1
+baz 2
+baz [3]
