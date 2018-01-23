@@ -1,3 +1,5 @@
+# rubocop:disable Style/RescueStandardError
+
 # The normal assignmet to a key is a ruby method call on a ruby object.
 # This will fail if the method already exists on the object by default.
 
@@ -17,3 +19,5 @@ rescue
   self['send'] = 'foo'
   self['test'] = 'foo'
 end
+
+# rubocop:enable Style/RescueStandardError

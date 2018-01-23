@@ -3,6 +3,13 @@
     "value": null
   },
   "will_work": {
-    "value": "something"
+    "value": "something2"
+  },
+  "will_also_work": {
+    "value": "something3"
+  },
+  "will_work_as_well": {
+    "value": "something4",
+    "error": "my_value4"
   }
 }

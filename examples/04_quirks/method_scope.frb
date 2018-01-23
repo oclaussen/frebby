@@ -1,25 +1,65 @@
+# rubocop:disable Style/ClassAndModuleChildren
+# rubocop:disable Style/MethodCallWithoutArgsParentheses
+# rubocop:disable Style/RescueStandardError
+
 # If you define custom functions in your config file, they will not be
 # available in nested objects, because they are evaluated in a different scope.
 
 # This will not work:
 
-def my_value
-  'something'
+def my_value1
+  'something1'
 end
 
 wont_work do
-  value my_value
+  value my_value1
 end
 
-# Instead, you could define the methods as singletons on the top-level
-# `Frebby` class, then they will be available throughout the rest of the config:
+# Instead, you could define the methods as class methods on a helper class:
 
-class ::Frebby
-  def my_value
-    'something'
+class ::Helper
+  class << self
+    def my_value2
+      'something2'
+    end
   end
 end
 
 will_work do
-  value my_value
+  value ::Helper.my_value2
 end
+
+# Or you could define your function as a proc object and then explicitly
+# call it:
+
+my_value3 = proc {
+  'something3'
+}
+
+will_also_work do
+  value my_value3.call() # Just `my_value()` will not work, however
+end
+
+# Or you define the method in the top-level `Frebby` object instead. Then
+# it will be available everywhere. Note that in this case you can't use that
+# name as a key anywhere:
+
+class ::Frebby
+  def my_value4
+    'something4'
+  end
+end
+
+will_work_as_well do
+  value my_value4
+
+  begin
+    my_value4 'this will throw an error, though'
+  rescue
+    error 'my_value4'
+  end
+end
+
+# rubocop:enable Style/ClassAndModuleChildren
+# rubocop:enable Style/MethodCallWithoutArgsParentheses
+# rubocop:enable Style/RescueStandardError
