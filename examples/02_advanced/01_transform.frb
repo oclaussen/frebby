@@ -1,0 +1,17 @@
+# Sometimes you want to use a different name for a certain key in, for example
+# if it contains characters that are not allowed in ruby method names. You can
+# use the `transform` function for this:
+
+require 'frebby/transform'
+
+Frebby.transform 'id', into: '#id'
+
+id 5
+
+# Another frequent use case is that a specific key should always be rendered as
+# an array, even if it is only used once. We included a `pluralize` function for
+# this:
+
+Frebby.pluralize 'hello', as: 'hellos'
+
+hello 'world'

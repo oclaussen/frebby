@@ -1,7 +1,7 @@
 # Often, you may want to include escaped JSON strings in your JSON. Frebby
 # makes this easy for you with the `as_json` method:
 
-require 'frebby/utils'
+require 'frebby/transform'
 
 foo Frebby.as_json {
   bar 'baz'

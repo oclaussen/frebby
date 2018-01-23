@@ -1,6 +1,6 @@
 # A silly example how you could use Frebby for more complex config generation:
 
-require 'frebby/utils'
+require 'frebby/transform'
 Frebby.pluralize 'odd', as: 'odds'
 Frebby.pluralize 'even', as: 'evens'
 

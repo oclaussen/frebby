@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'frebby/utils'
+require 'frebby/transform'
 
 Frebby.pluralize 'builder', as: 'builders'
 Frebby.pluralize 'provisioner', as: 'provisioners'

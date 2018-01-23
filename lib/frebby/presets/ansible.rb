@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'frebby/hooks'
-require 'frebby/utils'
+require 'frebby/transform'
 
 Frebby.pluralize 'play', as: 'plays'
 Frebby.pluralize 'task', as: 'tasks'

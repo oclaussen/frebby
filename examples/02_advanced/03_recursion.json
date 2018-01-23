@@ -1,6 +1,7 @@
 {
   "foo": [
     {
+      "#id": 5,
       "hellos": ["world"]
     },
     {

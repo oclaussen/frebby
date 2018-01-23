@@ -10,10 +10,10 @@ require 'frebby/recursion'
 
 # Assuming the unit tests read the files from stdin, so we write these paths
 # relative to the root of the project
-foo Frebby.read_file('examples/02_advanced/pluralize.frb')
+foo Frebby.read_file('examples/02_advanced/01_transform.frb')
 
 sample_text = <<~TEXT
-  require 'frebby/utils'
+  require 'frebby/transform'
   Frebby.pluralize 'bar', as: 'bars'
 
   bar 1

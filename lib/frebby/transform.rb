@@ -4,6 +4,10 @@ require 'frebby/hooks'
 
 class Frebby
   class << self
+    def transform(key, into:)
+      customize_key { |k| into if k == key.to_s }
+    end
+
     def pluralize(key, as: nil)
       customize_key { |k| as if k == key.to_s } unless as.nil?
 
