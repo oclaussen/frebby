@@ -23,77 +23,60 @@ class Frebby
   extend Forwardable
   def_delegators :@hash, :[], :[]=, :to_json
 
-  class << self
-    def _transform_key_hook(key, **_data)
-      key
-    end
-
-    def _transform_value_hook(value, **_data)
-      value
-    end
-
-    def _transform_result_hook(result, **_data)
-      result
-    end
-  end
-
   def initialize(initial = {}, &blk)
     @hash = initial.clone
     instance_eval(&blk) if block_given?
   end
 
-  def respond_to_missing?(_symbol, _respond_to = false)
-    true
-  end
+  def respond_to_missing?(_symbol, _respond_to = false) true end
 
   def method_missing(name, *args, &blk)
-    set_value = proc { |hash, value, keys|
-      raise "Error: #{hash} is not a Hash" unless hash.respond_to?(:[])
+    if args.empty? && !block_given?
+      return @hash[Frebby._transform_key_hook name.to_s]
+    end
+    args.unshift name
+    value = args.last.is_a?(Hash) || !block_given? ? args.pop : {}
+    value = Frebby.new value, &blk if block_given?
+    Frebby._set_value @hash, value, args
+  end
+
+  class << self
+    def _transform_key_hook(key, **_data) key end
+
+    def _transform_value_hook(value, **_data) value end
+
+    def _transform_result_hook(result, **_data) result end
+
+    def _set_value(hash, value, keys)
+      raise "Error: #{hash} is not a Hash" unless hash.respond_to? :[]
 
       original_key = keys.shift.to_s
-      key = Frebby._transform_key_hook(original_key)
+      key = _transform_key_hook original_key
 
-      unless keys.empty?
-        return set_value.call(hash[key] ||= Frebby.new, value, keys)
-      end
+      return _set_value(hash[key] ||= new, value, keys) unless keys.empty?
 
       existing = hash[key]
       new_value = if existing.nil?
                     value
-                  elsif existing.is_a?(Array)
-                    (existing + [value])
+                  elsif existing.is_a? Array
+                    existing + [value]
                   else
                     [existing, value]
                   end
 
-      hash[key] = Frebby._transform_value_hook(
-        new_value,
-        transformed_key: key,
-        original_key: original_key,
-        target: hash
-      )
-    }
-
-    if args.empty? && !block_given?
-      return @hash[Frebby._transform_key_hook(name.to_s)]
+      hash[key] = _transform_value_hook new_value,
+                                        transformed_key: key,
+                                        original_key: original_key,
+                                        target: hash
     end
-
-    args.unshift name
-    value = args.last.is_a?(Hash) || !block_given? ? args.pop : {}
-    value = Frebby.new(value, &blk) if block_given?
-    set_value.call(@hash, value, args)
   end
 end
 
-hash = Frebby.new
-
-lines = []
-ARGF.each do |line|
+item = Frebby.new
+ARGF.reduce [] do |lines, line|
   lines << line
-  if ARGF.eof?
-    hash.instance_eval(lines.join, ARGF.filename)
-    lines = []
-  end
+  next lines unless ARGF.eof?
+  item.instance_eval lines.join, ARGF.filename
+  []
 end
-
-STDOUT.puts Frebby._transform_result_hook(hash).to_json
+STDOUT.puts Frebby._transform_result_hook(item).to_json

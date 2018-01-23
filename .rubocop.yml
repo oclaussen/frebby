@@ -12,16 +12,16 @@ Style/Documentation:
 Naming/FileName:
   Exclude: ['Gemfile', 'Rakefile']
 
+# That's the whole point
+Style/MethodMissing:
+  Exclude: ['bin/frebby']
+
 # Yes, the main script is a bit weird
 Metrics/AbcSize:
   Exclude: ['bin/frebby']
-Metrics/CyclomaticComplexity:
-  Exclude: ['bin/frebby']
 Metrics/MethodLength:
   Exclude: ['bin/frebby']
-Metrics/PerceivedComplexity:
-  Exclude: ['bin/frebby']
-Style/MethodMissing:
+Style/SingleLineMethods:
   Exclude: ['bin/frebby']
 
 # These are just examples, so it's fine
