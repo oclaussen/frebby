@@ -1,0 +1,29 @@
+# This is the example featured in the README.md
+
+# Basic types (strings, numbers, lists, hashes) can be used just like
+# in Ruby:
+
+some_number 5
+
+some_string <<~TEXT
+  This is
+  a very long
+  text
+TEXT
+
+# Nested objects are created like this:
+
+some_object 'some_nested_object' do
+  some_key 'some value'
+  some_other_key 'some other value'
+end
+
+# Lists of objects are created by repeated blocks:
+
+some_list do
+  some_key 'some value'
+end
+
+some_list do
+  some_other_key 'some other value'
+end

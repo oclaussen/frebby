@@ -2,14 +2,14 @@
 
 ## What is this?
 
-frebby is a very, very simple Ruby script that generates JSON out of a Ruby
+`frebby` is a very, very simple Ruby script that generates JSON out of a Ruby
 based configuration language. It is intended as an alternative to the numerous
 attempts to write a more human-readable language for tool configuration (YAML,
-TOML, HCL, ...).
+TOML, HCL, to name a few).
 
-In contrast to these other languages, frebby is not a full blown parser. Instead
-it takes a bunch of Ruby code, `eval`s and turns it into JSON. The result can
-then be fed to basically anything that can read JSON.
+In contrast to these other languages, `frebby` is not a full blown parser.
+Instead it takes a bunch of Ruby code, `eval`s it  and turns it into JSON. The
+result can then be fed to basically anything that can read JSON.
 
 ## Why should I use this?
 
@@ -46,8 +46,7 @@ language camp and who feel YAML and HCL are lacking in possibilities.
 
 * Due to the way frebby uses (abuses?) the Ruby programming language, there
   are some quirks where it will not immediately work the way you would expect.
-  See the [quirks chapter](README.md#quirks) or the
-  [examples](examples/04_quirks) details.
+  See the relevant [examples](examples/04_quirks) details.
 
 ## How do I use this?
 
@@ -81,9 +80,7 @@ out of Docker:
 
 ```bash
 docker pull oclaussen/frebby
-
-# example usage:
-docker run --rm oclaussen/frebby /path/to/config/file.rb
+cat /path/to/config/file.rb | docker run --rm oclaussen/frebby
 ```
 
 ### Configuration syntax
@@ -92,11 +89,60 @@ Configuration for frebby is written in Ruby. The basic syntax looks like the
 love child of HCL and Chef's recipe DSL and should be immediately familiar
 to anyhone who has worked with either of them.
 
-TODO
+```ruby
+# Basic types (strings, numbers, lists, hashes) can be used just like
+# in Ruby:
 
-### Known quirks
+some_number 5
 
-TODO
+some_string <<EOF
+This is
+a very long
+text
+EOF
+
+# Nested objects are created like this:
+
+some_object 'some_nested_object' do
+  some_key 'some value'
+  some_other_key 'some other value'
+end
+
+# Lists of objects are created by repeated blocks:
+
+some_list do
+  some_key 'some value'
+end
+
+some_list do
+  some_other_key 'some_other_value'
+end
+```
+
+This example will produce the following JSON output (minus formatting)
+
+```json
+{
+  "some_number": 5,
+  "some_string": "This is\na very long\ntext\n",
+  "some_object": {
+    "some_nested_object": {
+      "some_key": "some value",
+      "some_other_key": "some other value"
+    }
+  },
+  "some_list": [
+    {
+      "some_key": "some value"
+    },
+    {
+      "some_other_key": "some other value"
+    }
+  ]
+}
+```
+
+For some more detailed examples, see the [examples](examples).
 
 ## License & Authors
 

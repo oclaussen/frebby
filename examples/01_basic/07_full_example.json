@@ -1,0 +1,18 @@
+{
+  "some_number": 5,
+  "some_string": "This is\na very long\ntext\n",
+  "some_object": {
+    "some_nested_object": {
+      "some_key": "some value",
+      "some_other_key": "some other value"
+    }
+  },
+  "some_list": [
+    {
+      "some_key": "some value"
+    },
+    {
+      "some_other_key": "some other value"
+    }
+  ]
+}
