@@ -8,9 +8,8 @@
 
 require 'frebby/recursion'
 
-# Assuming the unit tests read the files from stdin, so we write these paths
-# relative to the root of the project
-foo Frebby.read_file('examples/02_advanced/01_transform.frb')
+# We use an absolute path so it always works
+foo Frebby.read_file("#{Dir.pwd}/examples/02_advanced/01_transform.frb")
 
 sample_text = <<~TEXT
   require 'frebby/transform'

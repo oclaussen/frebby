@@ -8,7 +8,7 @@ class Frebby
     def read_file(filename)
       source = caller_locations(1..1).first.absolute_path
       current_dir = source == '-' ? Dir.pwd : File.dirname(source)
-      file = File.join(current_dir, filename)
+      file = File.expand_path(filename, current_dir)
       raise "File #{file} does not exist" unless File.exist?(file)
       raise "Could not read file #{file}" unless File.readable?(file)
       JSON.parse run_recursive(file)
