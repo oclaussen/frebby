@@ -72,7 +72,7 @@ to worry about.
 frebby /path/to/config/file.rb /path/to/other/config.rb > /new/json/config.json
 
 # alternatively:
-cat /path/to/config/file.rb | frebby > /new/json/config.json
+frebby < /path/to/config/file.rb > /new/json/config.json
 ```
 
 Aternatively, if you don't want to install Ruby locally, you can use frebby
@@ -80,8 +80,11 @@ out of Docker:
 
 ```bash
 docker pull oclaussen/frebby
-cat /path/to/config/file.rb | docker run --rm oclaussen/frebby
+docker run --rm -i oclaussen/frebby < /path/to/config/file.rb
 ```
+
+Remember that you need to either pass your config files to the docker container
+via stdin or mount your working directory, so that frebby can find them.
 
 ### Configuration syntax
 
