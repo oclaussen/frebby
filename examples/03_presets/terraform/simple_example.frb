@@ -1,3 +1,5 @@
+require 'frebby/presets/terraform'
+
 # This should match the simple terraform example from
 # https://www.terraform.io/intro/getting-started/build.html
 
