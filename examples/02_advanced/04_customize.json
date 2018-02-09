@@ -1,0 +1,11 @@
+{
+  "some_object": {
+    "new_key": "some thing",
+    "some_completely_other_key": "some completely other thing",
+    "some_nested_object": {
+      "new_key": "some other thing"
+    }
+  },
+  "copy_this": "this thing should be copied",
+  "copied_field": "this thing should be copied"
+}

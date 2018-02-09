@@ -54,10 +54,10 @@ language camp and who feel YAML and HCL are lacking in possibilities.
 
 At its core, frebby is just a very simple ruby script without dependencies. In
 theory, it is enough to just download the [main file](bin/frebby) and put it
-anywhere in your `$PATH`. However, there are more convenient options
-available:
+anywhere in your `$PATH`. However, this won't get you the additional customization
+options. Instead there are more convenient options available:
 
-Usually, you will want to install frebby directly from rubygems:
+Usually you will want to install frebby directly from rubygems:
 
 ```bash
 gem install frebby
@@ -122,7 +122,7 @@ some_list do
 end
 ```
 
-This example will produce the following JSON output (minus formatting)
+This example will produce the following JSON output (minus formatting):
 
 ```json
 {
@@ -146,6 +146,65 @@ This example will produce the following JSON output (minus formatting)
 ```
 
 For some more detailed examples, see the [examples](examples).
+
+### Customization
+
+It is also possible to exert a little more control over how frebby translates
+to JSON.
+
+```ruby
+# There are a bunch of customization functions available, that will act whenever
+# frebby tries to transform a key, value or the whole end result
+
+# Every translation goes through all registered customization functions, and
+# will apply the first one that returns a non-null result.
+
+require 'frebby/hooks'
+
+::Frebby.customize_key do |key, **_data|
+  'new_key' if %w[some_key some_other_key].include?(key)
+end
+
+::Frebby.customize_value do |value, **_data|
+  value.sub('value', 'thing') if value.is_a? String
+end
+
+::Frebby.customize_result do |result, **_data|
+  result['copied_field'] = result['copy_this']
+  result
+end
+
+some_object do
+  some_key 'some value'
+  some_completely_other_key 'some completely other value'
+
+  some_nested_object do
+    some_other_key 'some other value'
+  end
+end
+
+copy_this 'this value should be copied'
+```
+
+This example will produce the following JSON output:
+
+```json
+{
+  "some_object": {
+    "new_key": "some thing",
+    "some_completely_other_key": "some completely other thing",
+    "some_nested_object": {
+      "new_key": "some other thing"
+    }
+  },
+  "copy_this": "this thing should be copied",
+  "copied_field": "this thing should be copied"
+}
+```
+
+frebby also offers some more convenience functions that take care of common use
+cases. There are also some useful presets for existing tools. Again, take a look
+at the [examples](examples) for some inspiration.
 
 ## License & Authors
 

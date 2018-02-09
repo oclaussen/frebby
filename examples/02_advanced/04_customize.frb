@@ -1,0 +1,33 @@
+# This is the example featured in the README.md
+
+# There are a bunch of customization functions available, that will act whenever
+# frebby tries to transform a key, value or the whole end result
+
+# Every translation goes through all registered customization functions, and
+# will apply the first one that returns a non-null result.
+
+require 'frebby/hooks'
+
+::Frebby.customize_key do |key, **_data|
+  'new_key' if %w[some_key some_other_key].include?(key)
+end
+
+::Frebby.customize_value do |value, **_data|
+  value.sub('value', 'thing') if value.is_a? String
+end
+
+::Frebby.customize_result do |result, **_data|
+  result['copied_field'] = result['copy_this']
+  result
+end
+
+some_object do
+  some_key 'some value'
+  some_completely_other_key 'some completely other value'
+
+  some_nested_object do
+    some_other_key 'some other value'
+  end
+end
+
+copy_this 'this value should be copied'
