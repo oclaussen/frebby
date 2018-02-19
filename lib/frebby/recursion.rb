@@ -21,7 +21,7 @@ class Frebby
     private
 
     def run_recursive(*args, stdin_text: nil)
-      args.unshift $PROGRAM_NAME
+      args.unshift 'frebby'
       Open3.popen3 args.join(' ') do |stdin, stdout, stderr, thread|
         stdin.write stdin_text unless stdin_text.nil?
         stdin.close
