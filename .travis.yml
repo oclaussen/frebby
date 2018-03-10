@@ -8,3 +8,12 @@ branches:
     - master
 
 script: bundle exec rake
+
+deploy:
+  provider: rubygems
+  gem: frebby
+  on:
+    tags: true
+    repo: oclaussen/frebby
+  api_key:
+    secure: MfSu5H3f5aoP8bLcur7fgYUBwRxFBSeR0Y76uEtI88H0aELLydTHjgPLKz+PnDC183a7/n82UvSbFMmoR6Opy69E0Po9QSo31JQKGUoZGeh5dpmKcSaNAHT89UfSX0thfAdR0I1lozrqYT2ga0zs5ul4/JUOJXoyRVemWlZmMrtY+2ly+rdmsE3g8/UQJTX4pLRB1hvJF+xqGhEsVkaNb02esPsbxU1f5Jpb/DlKn3pUkW+3WVmehTqazsrUE/WofuGpiDSHKd8CyXoCL/xBh6+EGQml28LQ2klHml+UpPy74SSWqcotjyGUk4qPkW22nzVJHKGEhF9Neync0GSTsAKwFsNDpCEr7FbvI4KW+Dn63imdxdEP3OuSUMY7iQ4iJvCiivJmJ03tX9D/An3yofycZdpsgsT1jm9PwrStaDRIQ61WxfiY5wQ5FvRbQN7nzHgEij6lqhrWq2jNA3HFWh845EQXI3n3PnNNGEBVj7jdvC+RZ3fWMrlT2OTgMP33nJgEVTecbuCdFcIOVSvIu5Zwztwujg2gLJfGLfXPKwbvPH0dqqfgE836RWWTHv41r6PmpRBxQvYf/4zh0HUetTBJpBk0DJAnWykqpyGaH97A9FL/vBn37G/Iv9AHcu0m6s33qxaPDT8jeAocnNt7Whmr0kW00alS6kcDF63IDj8=
