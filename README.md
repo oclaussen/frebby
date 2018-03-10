@@ -1,5 +1,12 @@
 # frebby
 
+[![Gem](https://img.shields.io/gem/v/frebby.svg?style=plastic)][gem]
+[![Travis](https://img.shields.io/travis/oclaussen/frebby.svg?style=plastic)][travis]
+
+[gem]: https://rubygems.org/gems/frebby
+[travis]: http://travis-ci.org/oclaussen/frebby
+
+
 ## What is this?
 
 `frebby` is a very, very simple Ruby script that generates JSON out of a Ruby
