@@ -2,11 +2,17 @@
 
 Gem::Specification.new do |spec|
   spec.name           = 'frebby'
-  spec.version        = '0.0.1'
+  spec.version        = '1.0.0'
   spec.author         = 'Ole Claussen'
   spec.email          = 'claussen.ole@gmail.com'
   spec.license        = 'Apache-2.0'
-  spec.summary        = 'JSON generator'
+  spec.summary        = 'vs. JSON'
+  spec.description    = <<~DESCRIPTION
+    `frebby` is a very, very simple Ruby script that generates JSON out of a Ruby
+    based configuration language. It is intended as an alternative to the numerous
+    attempts to write a more human-readable language for tool configuration (YAML,
+    TOML, HCL, to name a few).
+  DESCRIPTION
   spec.homepage       = 'https://github.com/oclaussen/frebby'
 
   spec.files          = Dir['lib/**/*.rb'] + Dir['bin/*']
