@@ -8,6 +8,8 @@ class Frebby
       customize_key { |k| into if k == key.to_s }
     end
 
+    # rubocop:disable Naming/UncommunicativeMethodParamName
+    # ^ Because I think `as` makes sense here and allows for a nice DSL
     def pluralize(key, as: nil)
       customize_key { |k| as if k == key.to_s } unless as.nil?
 
@@ -18,6 +20,7 @@ class Frebby
         should_be_array && !v.is_a?(Array) ? [v] : nil
       end
     end
+    # rubocop:enable Naming/UncommunicativeMethodParamName
 
     def as_json(&blk)
       item = Frebby.new(&blk)
