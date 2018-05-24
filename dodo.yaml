@@ -1,0 +1,20 @@
+backdrops:
+  rake:
+    build:
+      context: .
+      steps:
+        - FROM ruby:2.4-alpine
+        - COPY *.gemspec Gemfile* ./
+        - RUN bundle install
+    volumes:
+      - ${PWD}:/build
+    working_dir: /build
+    script: bundle exec rake "$@"
+    command: all
+
+  frebby:
+    build: .
+    volumes:
+      - ${PWD}:/work
+    working_dir: /work
+    script: frebby "$@"
