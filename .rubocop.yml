@@ -13,7 +13,7 @@ Naming/FileName:
   Exclude: ['Gemfile', 'Rakefile']
 
 # That's the whole point
-Style/MethodMissing:
+Style/MethodMissingSuper:
   Exclude: ['bin/frebby']
 
 # Yes, the main script is a bit weird
