@@ -5,7 +5,9 @@ rvm:
 
 script: bundle exec rake
 
-all_branches: true
+branches:
+  only: 
+    - /.*/
 
 deploy:
   provider: rubygems
