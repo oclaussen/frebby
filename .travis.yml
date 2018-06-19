@@ -6,7 +6,6 @@ rvm:
 branches:
   only:
     - master
-    - /^\d\.\d\.\d\.$
 
 script: bundle exec rake
 
