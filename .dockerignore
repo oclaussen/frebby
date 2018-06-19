@@ -1,2 +1,4 @@
 /.git
 /.gitignore
+/pkg/*.gem
+/Gemfile.lock

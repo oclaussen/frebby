@@ -1,5 +1,7 @@
 FROM ruby:2.4-alpine as build
 
+RUN apk add --no-cache alpine-sdk
+
 COPY . /build
 
 RUN cd /build \
