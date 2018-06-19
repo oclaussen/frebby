@@ -5,6 +5,8 @@ rvm:
 
 script: bundle exec rake
 
+all_branches: true
+
 deploy:
   provider: rubygems
   gem: frebby
